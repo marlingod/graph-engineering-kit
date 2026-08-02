@@ -1,0 +1,42 @@
+{
+  "_comment": "OPT-IN EXAMPLE — not active. Hooks are project-specific (the lint/test commands vary), so this kit does NOT ship an active hooks.json (the plugin.json does not reference it). To use: copy the relevant hook into your PROJECT's .claude/settings.json, adapting the command to your stack. Deterministic hooks (which always run) beat advisory CLAUDE.md rules that get ignored under context pressure.",
+
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR}\" && <your-formatter e.g. npx prettier --write / black .> 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+
+    "PreToolUse": [
+      {
+        "_comment": "Guard rail: block writes to migrations without a deliberate review step.",
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "case \"$CLAUDE_TOOL_INPUT_FILE_PATH\" in *migrations/*) echo 'Blocked: migration files need explicit review (see migration-review skill).' >&2; exit 2;; esac"
+          }
+        ]
+      }
+    ],
+
+    "Stop": [
+      {
+        "_comment": "Verification gate for unattended/headless runs: don't let the turn end until the checks pass. Exit 2 keeps the agent working; adapt the command to your test/typecheck.",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR}\" && <your test + typecheck e.g. pytest -q && tsc --noEmit> || { echo 'Verification failed — keep going.' >&2; exit 2; }"
+          }
+        ]
+      }
+    ]
+  }
+}

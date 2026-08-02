@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "graph-engineering-kit",
+  "displayName": "Graph Engineering Kit",
+  "version": "0.1.0",
+  "description": "Portable graph-engineering tooling: the goal -> split -> fan-out -> verify -> merge blueprint as a skill, fresh-context reviewer subagents, /graph and /review commands, and project templates. Generic and project-agnostic.",
+  "author": { "name": "Yemalin" },
+  "license": "MIT",
+  "keywords": ["graph-engineering", "agents", "subagents", "code-review", "orchestration", "verification"]
+}

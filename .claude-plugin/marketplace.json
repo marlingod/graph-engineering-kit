@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace-manifest.json",
+  "name": "graph-engineering-marketplace",
+  "description": "Local marketplace hosting the Graph Engineering Kit plugin.",
+  "owner": { "name": "Yemalin" },
+  "plugins": [
+    {
+      "name": "graph-engineering-kit",
+      "source": "./",
+      "description": "Portable graph-engineering blueprint skill, reviewer subagents, /graph + /review commands, and project templates."
+    }
+  ]
+}

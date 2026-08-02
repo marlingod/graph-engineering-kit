@@ -1,0 +1,29 @@
+# <PROJECT> — working notes (non-obvious gotchas only)
+
+Keep this LEAN. Rule: for each line, ask "would removing this cause a mistake?" If not, cut it.
+A bloated CLAUDE.md makes the agent ignore your real instructions. Link to long docs, don't inline them.
+
+## Commands the agent can't guess
+- Build: `...`
+- Run tests: `...`  (the CORRECT settings/env — note anything counter-intuitive)
+- Lint/format/typecheck: `...`
+- Dev server: `...`
+
+## Conventions that DIFFER from language/framework defaults
+- Branching / PR etiquette: `...` (e.g. "branch off develop, never commit to main")
+- Commit style: `...`
+- Code style deltas: `...`
+
+## Architecture (one paragraph + a pointer)
+- Stack: `...`  ·  Services: `...`  ·  See `docs/...` for detail.
+
+## Non-obvious gotchas (the stuff that caused real bugs)
+- <e.g. custom auth object lacks X; two settings/requirements trees; a stale local venv; a
+  migration-state vs DB divergence; an env var quirk; a deploy step that must not be skipped>
+
+## Verification rule
+- Nothing is "done" without a machine-checkable pass/fail (tests / typecheck / build exit code, or a
+  real endpoint/browser check for UI). Never ship on a "looks right".
+
+## Danger zones (human-only / extra care)
+- <money paths, auth, prod migrations, anything irreversible>
