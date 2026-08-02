@@ -1,7 +1,7 @@
 ---
 name: security-reviewer
 description: Read-only security review of a diff/PR/app for auth, injection, secrets, access-control, and data-exposure issues. Fresh-context verifier node. Use on auth/payments/PII changes and before releases.
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Bash(git diff:*), Bash(git log:*), Bash(git show:*), Bash(git symbolic-ref:*), Bash(gh pr view:*)
 model: opus
 ---
 

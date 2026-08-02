@@ -1,27 +1,28 @@
 {
-  "_comment": "OPT-IN EXAMPLE — not active. Hooks are project-specific (the lint/test commands vary), so this kit does NOT ship an active hooks.json (the plugin.json does not reference it). To use: copy the relevant hook into your PROJECT's .claude/settings.json, adapting the command to your stack. Deterministic hooks (which always run) beat advisory CLAUDE.md rules that get ignored under context pressure.",
+  "_comment": "OPT-IN EXAMPLE — not active. This kit does NOT ship an active hooks.json (plugin.json does not reference it), because lint/test commands are project-specific. To use, copy the relevant hook into your PROJECT's .claude/settings.json and ADAPT it. Deterministic hooks (which always run) beat advisory CLAUDE.md rules that get ignored under context pressure. IMPORTANT: verify field/variable names against the current hooks API before relying on a guard — a guard that silently fails open is worse than none.",
 
   "hooks": {
-    "PostToolUse": [
+    "PreToolUse": [
       {
-        "matcher": "Write|Edit",
+        "_comment": "Guard rail: block writes to migration files without a deliberate review. Reads the tool input from stdin JSON (the documented hook input) rather than an env var, and matches multiple layouts. Requires jq. exit 2 blocks the tool call. VERIFY the stdin shape against your hooks-API version.",
+        "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR}\" && <your-formatter e.g. npx prettier --write / black .> 2>/dev/null || true"
+            "command": "path=\"$(jq -r '.tool_input.file_path // .tool_input.path // empty')\"; case \"$path\" in */migrations/*|*/migrate/*|*/alembic/versions/*) echo 'Blocked: migration file needs explicit review (see the migration-review skill).' >&2; exit 2;; esac"
           }
         ]
       }
     ],
 
-    "PreToolUse": [
+    "PostToolUse": [
       {
-        "_comment": "Guard rail: block writes to migrations without a deliberate review step.",
+        "_comment": "Format on edit. Pin to a LOCALLY-installed binary (no `npx`, which can fetch/execute a package over the network on every edit). Adapt the binary to your stack (black, gofmt, rustfmt, ...).",
         "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "command",
-            "command": "case \"$CLAUDE_TOOL_INPUT_FILE_PATH\" in *migrations/*) echo 'Blocked: migration files need explicit review (see migration-review skill).' >&2; exit 2;; esac"
+            "command": "cd \"${CLAUDE_PROJECT_DIR}\" && [ -x ./node_modules/.bin/prettier ] && ./node_modules/.bin/prettier --write --ignore-unknown \"$(jq -r '.tool_input.file_path // empty')\" || true"
           }
         ]
       }
@@ -29,11 +30,11 @@
 
     "Stop": [
       {
-        "_comment": "Verification gate for unattended/headless runs: don't let the turn end until the checks pass. Exit 2 keeps the agent working; adapt the command to your test/typecheck.",
+        "_comment": "Verification gate for unattended/headless runs: exit 2 keeps the agent working until the checks pass. CAVEAT: if the check can NEVER pass (flaky/broken test, missing tool), this loops and burns tokens — bound it (a run-count file, a timeout on the command, or only enable it interactively). Adapt to your test/typecheck.",
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR}\" && <your test + typecheck e.g. pytest -q && tsc --noEmit> || { echo 'Verification failed — keep going.' >&2; exit 2; }"
+            "command": "cd \"${CLAUDE_PROJECT_DIR}\" && timeout 600 sh -c '<your test + typecheck, e.g. pytest -q && tsc --noEmit>' || { echo 'Verification failed — keep going.' >&2; exit 2; }"
           }
         ]
       }

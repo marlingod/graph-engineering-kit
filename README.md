@@ -24,12 +24,12 @@ create those quickly.
 
 **Fastest (no marketplace) — load it for one session:**
 ```
-claude --plugin-dir /Users/yemalin/Documents/projects/graph-engineering-kit
+claude --plugin-dir ~/Documents/projects/graph-engineering-kit
 ```
 
 **Persistent — install from the bundled local marketplace:**
 ```
-/plugin marketplace add /Users/yemalin/Documents/projects/graph-engineering-kit
+/plugin marketplace add ~/Documents/projects/graph-engineering-kit
 /plugin install graph-engineering-kit@graph-engineering-marketplace
 /reload-plugins
 ```

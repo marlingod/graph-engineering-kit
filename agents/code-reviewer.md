@@ -1,7 +1,7 @@
 ---
 name: code-reviewer
 description: Fresh-context reviewer for a diff/PR before merge. Flags correctness, regression, and requirement gaps — not style nitpicks or speculative over-engineering. Use as a gate on every non-trivial PR.
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Bash(git diff:*), Bash(git log:*), Bash(git show:*), Bash(git symbolic-ref:*), Bash(gh pr view:*)
 model: opus
 ---
 
