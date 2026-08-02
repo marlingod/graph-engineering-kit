@@ -58,5 +58,17 @@ Keep it a **loop** unless the work genuinely splits into specialties + fan-out +
 A graph is many loops (~15× tokens) — reserve it for high-value research/audits/design. Give the
 reviewer node teeth (read-only, adversarial). Never mark work done without a machine-checkable pass/fail.
 
+## Security posture
+Installing this plugin lets it run **agents and (opt-in) hooks inside your Claude Code session, across
+every project it's installed in**. Treat it like any dependency with execution rights:
+- **Keep write access to this repo tight** — it is its own marketplace (`source: "./"`), so anyone who
+  can push here can change what runs in your sessions. Protect the default branch; review PRs.
+- **Prefer pinned/tagged installs** over "always latest" for anything you didn't just author, and
+  **review the diff before `/reload-plugins`** after pulling changes.
+- **The reviewer subagents are scoped to read-only git/gh verbs** (not full `Bash`) by design — they
+  ingest untrusted diffs/PRs, so keep it that way. Don't widen their `tools:` grant.
+- **Hooks ship inert** — `plugin.json` does not reference `hooks/`. The examples are opt-in and must be
+  adapted per project; verify any guard actually fires (a guard that fails open is worse than none).
+
 ## License
 MIT
