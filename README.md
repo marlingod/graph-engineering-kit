@@ -13,6 +13,7 @@ create those quickly.
 | Component | What it is |
 |---|---|
 | `skills/graph-research/` | The graph blueprint as a skill — the loop-vs-graph decision, the fan-out/verify/merge recipe, spend caps, and how to run it (Workflow tool / subagents). |
+| `skills/diagnose-reachability/` | Debug "works from region A, times out from region B" — layered elimination (firewall/SG/DNS/cert/NACL/path-MTU) → MSS-clamp bridge fix → CDN-in-front durable fix, with the cutover footguns. |
 | `agents/code-reviewer.md` | Fresh-context **verifier node**: reviews a diff for correctness/regression/requirement gaps (read-only, real-defects-only). |
 | `agents/security-reviewer.md` | Fresh-context verifier for auth/injection/secrets/money/PII. |
 | `commands/graph.md` | `/graph <task>` — run the blueprint on a research/audit/design task. |
